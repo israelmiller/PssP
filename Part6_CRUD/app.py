@@ -19,7 +19,6 @@ app.secret_key = 'sdf#$#dfjkhdf0SDJH0df9fd98343fdfu34rf'
 
 db.init_app(app)
 
-
 ### Models ###
 class Patients(db.Model):
     __tablename__ = 'production_patients'
@@ -30,14 +29,20 @@ class Patients(db.Model):
     last_name = db.Column(db.String(255))
     zip_code = db.Column(db.String(255), nullable=True)
     gender = db.Column(db.String(255), nullable=True)
+    contact_mobile = db.Column(db.String(255), nullable=True)
+    contact_home = db.Column(db.String(255), nullable=True)
+    dob = db.Column(db.Date, nullable=True)
 
     # this first function __init__ is to establish the class for python GUI
-    def __init__(self, mrn, first_name, last_name, zip_code, gender):
+    def __init__(self, mrn, first_name, last_name, zip_code, gender, contact_mobile, contact_home, dob):
         self.mrn = mrn
         self.first_name = first_name
         self.last_name = last_name
         self.zip_code = zip_code
         self.gender = gender
+        self.contact_mobile = contact_mobile
+        self.contact_home = contact_home
+        self.dob = dob
 
     # this second function is for the API endpoints to return JSON 
     def to_json(self):
@@ -47,7 +52,10 @@ class Patients(db.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'zip_code': self.zip_code,
-            'gender': self.gender
+            'gender': self.gender,
+            'contact_mobile': self.contact_mobile,
+            'contact_home': self.contact_home,
+            'dob': self.dob
         }
 
 class Conditions_patient(db.Model):
@@ -158,7 +166,10 @@ def insert(): # note this function needs to match name in html form action
         last_name = request.form['last_name']
         gender = request.form['gender']
         zip_code = request.form['zip_code']
-        new_patient = Patients(mrn, first_name, last_name, gender, zip_code)
+        contact_mobile = request.form['contact_mobile']
+        contact_home = request.form['contact_home']
+        dob = request.form['dob']
+        new_patient = Patients(mrn, first_name, last_name, gender, zip_code, contact_home, contact_mobile, dob)
         db.session.add(new_patient)
         db.session.commit()
         flash("Patient Inserted Successfully")
@@ -177,6 +188,10 @@ def update(): # note this function needs to match name in html form action
         patient.first_name = request.form.get('first_name')
         patient.last_name = request.form.get('last_name')
         patient.gender = request.form.get('gender')
+        patient.zip_code = request.form.get('zip_code')
+        patient.contact_mobile = request.form.get('contact_mobile')
+        patient.contact_home = request.form.get('contact_home')
+        patient.dob = request.form.get('dob')
         db.session.commit()
         flash("Patient Updated Successfully")
         return redirect(url_for('get_gui_patients'))

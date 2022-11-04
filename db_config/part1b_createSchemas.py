@@ -127,7 +127,7 @@ db_gcp.execute(table_prod_patient_conditions)
 gcp_tables = db_gcp.table_names()
 
 
-droppingFunction_limited(gcp_tables, db_gcp)
+#droppingFunction_limited(gcp_tables, db_gcp)
 
 
 ### confirm that it worked 
